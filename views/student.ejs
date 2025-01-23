@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3b3f51;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #3b3f51;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        table tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .profile-summary {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-summary h3 {
+            color: #4CAF50;
+        }
+
+        .profile-summary p {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .profile-summary .percentage {
+            font-weight: bold;
+            font-size: 22px;
+            color: #4CAF50;
+        }
+
+        .go-back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007BFF;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .go-back:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-summary">
+        <p><strong>Username:</strong> <%= student.username %></p>
+        <p><strong>Roll No:</strong> <%= student.rollno %></p>
+        <p class="percentage">Percentage: <%= student.percentage %>%</p> 
+        <p><strong>Exam Month:</strong> <%= student.examMonth %></p>
+    </div>
+
+    <!-- Table for subjects -->
+    <table>
+        <thead>
+            <tr>
+                <th>Subject Name</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>IA</th>
+                <th>TW</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% student.subjects.forEach(subject => { %>
+                <tr>
+                    <td><%= subject.name %></td>
+                    <td><%= subject.marks %></td>
+                    <td><%= subject.grade %></td>
+                    <td><%= subject.IA%></td>
+                    <td><%= subject.TW%></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>
