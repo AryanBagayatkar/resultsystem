@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -100,40 +101,6 @@ app.get('/admin/updateStudent/:id', async (req, res) => {
         res.status(500).send('Error fetching student for update');
     }
 });
-// Route to handle student update
-app.post('/admin/updateStudent/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { rollno, username, password, examMonth, subjects } = req.body;
-
-        // Validate and transform the subjects array
-        const updatedSubjects = subjects.map((subject) => ({
-            name: subject.name,
-            marks: parseInt(subject.marks, 10), // Convert marks to integer
-            grade: subject.grade,
-            IA: parseInt(subject.IA, 10), // Convert IA to integer
-            TW: parseInt(subject.TW, 10), // Convert TW to integer
-        }));
-
-        // Update the student document in the database
-        await Student.findByIdAndUpdate(
-            id,
-            {
-                rollno,
-                username,
-                password,
-                examMonth,
-                subjects: updatedSubjects, // Use the correctly transformed subjects array
-            },
-            { new: true } // Option to return the updated document
-        );
-
-        res.redirect('/admin'); // Redirect back to the admin dashboard
-    } catch (error) {
-        console.error('Error updating student:', error.message);
-        res.status(500).send('Error updating student');
-    }
-});
 
 app.post('/admin/deleteStudent/:id', async (req, res) => {
     try {
@@ -147,19 +114,25 @@ app.post('/admin/deleteStudent/:id', async (req, res) => {
 });
 // Dynamic route for student profile
 app.get('/student/:username', async (req, res) => {
-    const { username } = req.params;
+    try {
+        const { username } = req.params;
 
-    // Find the student by username
-    const student = await Student.findOne({ username });
+        // Find the student by username (case-insensitive search)
+        const student = await Student.findOne({ username: { $regex: `^${username}$`, $options: 'i' } });
 
-    if (student) {
-        // Exclude the password before rendering the student's profile
-        const { password, ...studentData } = student.toObject();
-        res.render('student', { student: studentData }); // Render student profile page
-    } else {
-        res.send('Student not found');
+        if (student) {
+            // Exclude the password before rendering the student's profile
+            const { password, ...studentData } = student.toObject();
+            res.render('student', { student: studentData }); // Render student profile page
+        } else {
+            res.status(404).send('Student not found');
+        }
+    } catch (error) {
+        console.error('Error fetching student:', error.message);
+        res.status(500).send('Internal Server Error');
     }
 });
+
 // Define the port
 const PORT = process.env.PORT || 3700;
 // Start the server
