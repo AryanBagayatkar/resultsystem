@@ -104,26 +104,33 @@ app.get('/admin/updateStudent/:id', async (req, res) => {
 app.post('/admin/updateStudent/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { rollno, username, password, subjects, examMonth, IA, TW } = req.body;
+        const { rollno, username, password, examMonth, subjects } = req.body;
 
-        // Update the student data
-        await Student.findByIdAndUpdate(id, {
-            rollno,
-            username,
-            password,
-            examMonth, // Updated examMonth
-            IA: parseInt(IA, 10), // Updated Internal Assessment (IA)
-            TW: parseInt(TW, 10), // Updated Term Work (TW)
-            subjects: subjects.map((subject) => ({
-                name: subject.name,
-                marks: parseInt(subject.marks, 10),
-                grade: subject.grade,
-            })),
-        });
+        // Validate and transform the subjects array
+        const updatedSubjects = subjects.map((subject) => ({
+            name: subject.name,
+            marks: parseInt(subject.marks, 10), // Convert marks to integer
+            grade: subject.grade,
+            IA: parseInt(subject.IA, 10), // Convert IA to integer
+            TW: parseInt(subject.TW, 10), // Convert TW to integer
+        }));
+
+        // Update the student document in the database
+        await Student.findByIdAndUpdate(
+            id,
+            {
+                rollno,
+                username,
+                password,
+                examMonth,
+                subjects: updatedSubjects, // Use the correctly transformed subjects array
+            },
+            { new: true } // Option to return the updated document
+        );
 
         res.redirect('/admin'); // Redirect back to the admin dashboard
     } catch (error) {
-        console.error('Error updating student:', error);
+        console.error('Error updating student:', error.message);
         res.status(500).send('Error updating student');
     }
 });
@@ -154,7 +161,7 @@ app.get('/student/:username', async (req, res) => {
     }
 });
 // Define the port
-const PORT = 3700;
+const PORT = process.env.PORT || 3700;
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
