@@ -88,17 +88,80 @@ app.post('/createStudent', async (req, res) => {
     }
 });
 // Route to render the update form for a specific student
-app.get('/admin/updateStudent/:id', async (req, res) => {
+app.get('/admin/updateStudent/:username', async (req, res) => {
     try {
-        const { id } = req.params;
-        const student = await Student.findById(id); // Find the student by ID
+        const { username } = req.params;
+        const student = await Student.findOne({ username });
         if (!student) {
+            console.log('Student not found for username:', username);
             return res.status(404).send('Student not found');
         }
         res.render('updateStudent', { student }); // Render the update form
     } catch (error) {
         console.error('Error fetching student for update:', error);
         res.status(500).send('Error fetching student for update');
+    }
+});
+
+app.post('/admin/updateStudent/:username', async (req, res) => {
+    try {
+        const { username } = req.params; // Extract username from URL
+        const {
+            examMonth,
+            rollno,
+            password,
+            subjects,
+        } = req.body; // Extract updated fields from form data
+
+        // Find the student by username
+        const student = await Student.findOne({ username });
+        if (!student) {
+            return res.status(404).send('Student not found');
+        }
+
+        // Update the student details
+        student.examMonth = examMonth;
+        student.rollno = rollno;
+        student.password = password;
+
+        // Update subjects
+        if (subjects) {
+            student.subjects = subjects.map((subject) => ({
+                name: subject.name,
+                marks: parseInt(subject.marks, 10),
+                grade: subject.grade,
+                IA: parseInt(subject.IA, 10),
+                TW: parseInt(subject.TW, 10),
+            }));
+        }
+
+        // Save the updated student
+        await student.save();
+
+        // Redirect to the admin dashboard or another page
+        res.redirect('/admin/studentList'); // Adjust this to your desired redirection
+    } catch (error) {
+        console.error('Error updating student:', error);
+        res.status(500).send('Error updating student');
+    }
+});
+app.get('/admin/studentList', async (req, res) => {
+    try {
+        const search = req.query.search; // Get search term from query
+        let students;
+
+        if (search) {
+            // Search for students by username (case-insensitive)
+            students = await Student.find({ username: { $regex: search, $options: 'i' } });
+        } else {
+            // Fetch all students if no search term is provided
+            students = await Student.find();
+        }
+
+        res.render('studentList', { students, search }); // Pass search term to the view
+    } catch (error) {
+        console.error('Error fetching student list:', error);
+        res.status(500).send('Error fetching student list');
     }
 });
 
