@@ -33,6 +33,14 @@
                     <input type="text" name="password" id="password" class="form-control" value="<%= student.password %>" required>
                 </div>
 
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <select name="status" id="status" class="form-select" required>
+                        <option value="pass">Pass</option>
+                        <option value="fail">Fail</option>
+                    </select>
+                </div>
+
                 <h3 class="mb-3">Update Subjects</h3>
                 <% student.subjects.forEach((subject, index) => { %>
                     <div class="mb-3">
