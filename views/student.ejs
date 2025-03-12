@@ -126,18 +126,21 @@
     </style>
 </head>
 <body>
-    <div class="container1">
+    <div class="container1" id="printDiv">
         <div class="gg">
             <div>
                 <p><strong>Username:</strong> <%= student.username %></p>
             <p><strong>Roll No:</strong> <%= student.rollno %></p>
+            <p>Staus: <%= student.status %></p>
             </div>
             <hr class="line">
             <div>
                 <p class="percentage">Percentage: <%= student.percentage %>%</p> 
                 <p><strong>Exam Month:</strong> <%= student.examMonth %></p>
+                <p>SGPA: <%= student.sgpa || 'N/A' %></p>
             </div>
         </div>
+        
         <!-- Table for subjects -->
         <table border="1">
             <thead>
@@ -169,8 +172,14 @@
     <script>
         // Function to print the page
         function printPage() {
-            window.print();
-        }
+        const printContents = document.getElementById('printDiv').innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents; // Replace the body content with the container1 content
+        window.print(); // Trigger the print dialog
+        document.body.innerHTML = originalContents; // Restore the original content
+        location.reload(); // Reload the page to restore functionality
+    }
 
         // Function to download the content as a PDF
         function downloadPDF() {
