@@ -6,13 +6,24 @@
     <title>Admin Dashboard</title>
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .actr{
+            background: linear-gradient(16deg,#ff4e59,#111);
+        }
+        .act1{
+            color: white;
+        }
+        .foad{
+            border-radius: 50px;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body class="bg-light actr">
     <div class="container my-5">
-        <h1 class="text-start mb-4">Admin Dashboard</h1>
+        <h1 class="text-start mb-4 act1">Admin Dashboard</h1>
         
         <!-- Create New Student Account Form -->
-        <form action="/createStudent" method="POST" class="border rounded p-4 bg-white shadow-sm">
+        <form action="/createStudent" method="POST" class="border rounded p-4 bg-white shadow-sm foad">
             <h2 class="mb-3">Create New Student Account</h2>
             <div class="mb-3">
                 <input type="number" name="rollno" class="form-control" placeholder="Roll Number" required>
@@ -25,6 +36,13 @@
             </div>
             <div class="mb-3">
                 <input type="text" name="examMonth" class="form-control" placeholder="Exam Month (e.g., Jan 2025)" required>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <select name="status" id="status" class="form-select" required>
+                    <option value="pass">Pass</option>
+                    <option value="fail">Fail</option>
+                </select>
             </div>
             <h3 class="mt-4">Add Subjects</h3>
             <div id="subjects-container">
@@ -53,9 +71,11 @@
             </div>
             <button type="submit" class="btn btn-primary w-100 mt-3">Create Student</button>
         </form>
-
-        <a href="/admin/studentList" class="btn btn-primary">Student List</a>
-        <a href="/" class="btn btn-primary ">Logout</a>
+        <div class="mt-2">
+            <a href="/admin/studentList" class="btn btn-primary">Student List</a>
+            <a href="/" class="btn btn-primary ">Logout</a>
+        </div>
+     
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
