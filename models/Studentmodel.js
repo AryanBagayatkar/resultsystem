@@ -15,7 +15,13 @@ const studentSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     percentage: { type: Number },
+    sgpa:  Number,
     examMonth: { type: String, required: true }, 
+    status: {
+        type: String,
+        enum: ['pass', 'fail'],
+        default: 'pass', // Default value
+    },
     subjects: [subjectSchema] 
 });
 
