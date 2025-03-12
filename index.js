@@ -27,7 +27,7 @@ app.set('view engine', 'ejs');
 const JWT_SECRET = process.env.JWT_SECRET || 'my_key';
 // Define a route to render the EJS file
 app.get('/',(req,res)=>{
-    res.render('Home');
+    res.render('home');
 })
 app.get('/login', (req, res) => {
     res.render('index', { name: 'User' }); // Pass variables to EJS
