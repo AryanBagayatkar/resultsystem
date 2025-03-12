@@ -54,17 +54,44 @@
         footer {
             border-top: 1px solid black;
         }
-        @media (max-width: 1180px) {
-            .img-cont img {
-                display: none;
-            }
+        
+    @media (max-width: 1180px) {
+        .img-cont img {
+            display: none; /* Hides the image for smaller screens */
         }
-        @media (max-width: 768px) {
-            .inner1 {
-                width: 80%;
-                height: auto;
-            }
+        .inner1 {
+            width: 70%; /* Adjusts the width for smaller screens */
         }
+    }
+
+    @media (max-width: 768px) {
+        .main {
+            flex-direction: column; /* Stacks elements vertically */
+            height: auto; /* Adjusts height for better fit */
+        }
+        .inner1 {
+            width: 90%; /* Further adjusts the width */
+            padding: 15px; /* Reduces padding for better spacing */
+        }
+        .feature {
+            flex-wrap: wrap; /* Allows features to wrap on smaller screens */
+            justify-content: center; /* Centers the features */
+            gap: 10px; /* Adds spacing between circles */
+        }
+        .feature-circle {
+            width: 40px; /* Reduces circle size */
+            height: 40px; /* Reduces circle size */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .h4 {
+            font-size: 1rem; /* Adjusts font size for smaller devices */
+        }
+        .inner1 {
+            box-shadow: none; /* Simplifies the layout on very small devices */
+        }
+    }
     </style>
 </head>
 <body>
