@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const Student = require('./models/Studentmodel'); // Assuming you have a Student model in this path
+const path = require('path');
 const app = express();
 
 // MongoDB Connection String (Replace with your actual URI)
@@ -18,17 +19,21 @@ mongoose.connect(MONGO_URI)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'my_key';
 // Define a route to render the EJS file
-app.get('/', (req, res) => {
+app.get('/',(req,res)=>{
+    res.render('Home');
+})
+app.get('/login', (req, res) => {
     res.render('index', { name: 'User' }); // Pass variables to EJS
 });
 
-app.post('/', async (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         // Admin Login
@@ -60,24 +65,27 @@ app.get('/admin', async (req, res) => {
         res.status(500).send('Error fetching students');
     }
 });
+
 app.post('/createStudent', async (req, res) => {
-    const { rollno, username, password, subjects, examMonth, IA, TW } = req.body;
+    const { rollno, username, password, subjects, examMonth, IA, TW , status  } = req.body;
 
     // Calculate percentage from subjects' marks
     const totalMarks = subjects.reduce((sum, subject) => sum + parseFloat(subject.marks), 0); // Ensure marks are numeric
     const percentage = ((totalMarks / (subjects.length * 100)) * 100).toFixed(2); 
-
+    const sgpa = (percentage / 10).toFixed(2); // Convert percentage to SGPA (on a scale of 10)
+   
     const student = new Student({
         rollno,
         username,
         password,
         percentage,
+        sgpa,
         examMonth,
         IA,        
-        TW,        
+        TW, 
+        status,      
         subjects
     });
-
     try {
         // Save the student to MongoDB
         await student.save();
@@ -111,6 +119,7 @@ app.post('/admin/updateStudent/:username', async (req, res) => {
             rollno,
             password,
             subjects,
+            status,
         } = req.body; // Extract updated fields from form data
 
         // Find the student by username
@@ -123,6 +132,7 @@ app.post('/admin/updateStudent/:username', async (req, res) => {
         student.examMonth = examMonth;
         student.rollno = rollno;
         student.password = password;
+        student.status = status;
 
         // Update subjects
         if (subjects) {
@@ -169,7 +179,7 @@ app.post('/admin/deleteStudent/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await Student.findByIdAndDelete(id); // Delete the student by ID
-        res.redirect('/admin'); // Redirect back to the admin dashboard
+        res.redirect('/admin/studentList'); // Redirect back to the admin dashboard
     } catch (error) {
         console.error('Error deleting student:', error);
         res.status(500).send('Error deleting student');
