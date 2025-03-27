@@ -11,7 +11,7 @@ const subjectSchema = new mongoose.Schema({
 
 // Student Schema
 const studentSchema = new mongoose.Schema({
-    rollno: { type: Number, required: true },
+    rollno: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     percentage: { type: Number },
@@ -22,7 +22,7 @@ const studentSchema = new mongoose.Schema({
         enum: ['pass', 'fail'],
         default: 'pass', // Default value
     },
-    subjects: [subjectSchema] 
+    subjects: [subjectSchema]
 });
 
 // Create a model based on the schema
