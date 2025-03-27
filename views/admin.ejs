@@ -25,8 +25,9 @@
         <!-- Create New Student Account Form -->
         <form action="/createStudent" method="POST" class="border rounded p-4 bg-white shadow-sm foad">
             <h2 class="mb-3">Create New Student Account</h2>
+            
             <div class="mb-3">
-                <input type="number" name="rollno" class="form-control" placeholder="Roll Number" required>
+                <input type="text" name="rollno" class="form-control" placeholder="Roll Number" required>
             </div>
             <div class="mb-3">
                 <input type="text" name="username" class="form-control" placeholder="Student Username" required>
@@ -35,7 +36,7 @@
                 <input type="password" name="password" class="form-control" placeholder="Student Password" required>
             </div>
             <div class="mb-3">
-                <input type="text" name="examMonth" class="form-control" placeholder="Exam Month (e.g., Jan 2025)" required>
+                <input type="text" name="examMonth" class="form-control" placeholder="Semester" required>
             </div>
             <div class="mb-3">
                 <label for="status" class="form-label">Status:</label>
